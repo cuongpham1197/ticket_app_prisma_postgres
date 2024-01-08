@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import axios from "axios";
 
 const TicketForm = ({ ticket }) => {
   const EDITMODE = ticket.id === "new" ? false : true;
@@ -36,25 +37,38 @@ const TicketForm = ({ ticket }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (EDITMODE) {
-      const res = await fetch(`/api/tickets/${ticket.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!res.ok) {
+      // const res = await fetch(`/api/tickets/${ticket.id}`, {
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+
+      const res = await axios.put(
+        `http://localhost:3000/api/tickets/${ticket.id}`,
+        formData
+      );
+
+      if (!res) {
         throw new Error("Failed to update ticket");
       }
     } else {
-      const res = await fetch("/api/tickets", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      // const res = await fetch("/api/tickets", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+
+      const res = await axios({
+        method: "post",
+        url: "http://localhost:3000/api/tickets",
+        data: formData,
       });
-      if (!res.ok) {
+
+      if (!res) {
         throw new Error("Failed to create ticket");
       }
     }

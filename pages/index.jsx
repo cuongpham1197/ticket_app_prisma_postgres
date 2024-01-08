@@ -1,5 +1,6 @@
 import TicketCard from "@/components/TicketCard";
 import React from "react";
+import axios from "axios";
 
 const Dashboard = ({ tickets }) => {
   const uniqueCategories = [
@@ -33,9 +34,13 @@ const Dashboard = ({ tickets }) => {
 };
 
 export async function getServerSideProps() {
-  const res = await fetch("http://localhost:3000//api/tickets");
+  // const res = await fetch("http://localhost:3000//api/tickets");
   // console.log("res: ", res)
-  const tickets = await res.json();
+  // const tickets = await res.json();
+
+  const tickets = await axios
+    .get("http://localhost:3000/api/tickets")
+    .then((res) => res.data);
   console.log("get all tickets: ", tickets);
   return { props: { tickets: tickets.tickets } };
 }
